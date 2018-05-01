@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions
 
 class Course(models.Model):
     _name = 'openacademy.course'
@@ -45,5 +45,11 @@ class Session(models.Model):
                             'message': "nombre de participants ne peut pas être > au nombre de places dispos",
                             }
             }
+
+    @api.constrains('seats', 'attendee_ids')
+    def _constraint_seats(self):
+        for record in self:
+            if record.seats<len(record.attendee_ids):
+                raise exceptions.ValidationError("pas assez de place")
 
 
