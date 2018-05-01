@@ -2,6 +2,17 @@
 
 from odoo import models, fields, api, exceptions
 
+class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    # Add a new column to the res.partner model, by default partners are not
+    # instructors
+    instructor = fields.Boolean("Instructor", default=False)
+
+    session_ids = fields.Many2many('openacademy.session',
+        string="Attended Sessions", readonly=True)
+
+
 class Course(models.Model):
     _name = 'openacademy.course'
 
@@ -9,6 +20,8 @@ class Course(models.Model):
     description = fields.Text()
     responsible_id = fields.Many2one('res.users', ondelte='set null', string='Responsible', index=True)
     session_ids = fields.One2many('openacademy.session', 'course_id', string="Sessions")
+    _sql_constraints = [('name_description_check','CHECK(name!=description)','Le nom d\'un cours doit être différent de sa description'),
+                        ('unique_course_name','UNIQUE(name)','il ne peut pas y avoir deux cours de même nom'),]
 
 class Session(models.Model):
     _name = 'openacademy.session'
