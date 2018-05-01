@@ -14,9 +14,10 @@ class Session(models.Model):
     _name = 'openacademy.session'
 
     name = fields.Char(required=True)
-    start_date = fields.Date()
+    start_date = fields.Date(default=fields.Date.today)
     duration = fields.Float(digits=(6,2), help="duration in days")
     seats = fields.Integer(string="number of seats")
+    active = fields.Boolean(default=True)
     instructor_id = fields.Many2one('res.partner', string='instructor')
     course_id = fields.Many2one('openacademy.course', ondelete='cascade', string="Course", required=True)
     attendee_ids = fields.Many2many('res.partner', string="Attendees")
@@ -28,5 +29,21 @@ class Session(models.Model):
                 r.taken_seats = 0.0
             else:
                 r.taken_seats = 100.0 * len(r.attendee_ids) / r.seats
+
+
+    @api.onchange('seats', 'attendee_ids')
+    def _verif_valid_seats(self):
+        if self.seats<0:
+            return {
+                'warning' : {'title' : "nombre de sièges incorrect",
+                              'message' : "nombre de sièges ne peut pas être <0",
+                             }
+            }
+        if self.seats<len(self.attendee_ids):
+            return {
+                'warning': {'title': "trop de participants",
+                            'message': "nombre de participants ne peut pas être > au nombre de places dispos",
+                            }
+            }
 
 

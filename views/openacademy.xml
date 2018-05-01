@@ -72,6 +72,7 @@
 							<field name="duration"/>
 							<field name="seats"/>
 							<field name="taken_seats" widget="progressbar"/>
+							<field name="active"/>
 
 						</group>
 						<label for="attendee_ids"/>
