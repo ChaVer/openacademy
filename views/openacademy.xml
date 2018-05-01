@@ -16,6 +16,17 @@
                 </p>
             </field>
         </record>
+
+        <record model="ir.actions.act_window" id="session_list_action">
+            <field name="name">Sessions</field>
+            <field name="res_model">openacademy.session</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first session
+                </p>
+            </field>
+        </record>
 		
 		<record model="ir.ui.view" id="course_form_view">
 			<field name="name">course.form</field>
@@ -34,6 +45,23 @@
 								hello world !
 							</page>
 						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="session_form_view">
+			<field name="name">session.form</field>
+			<field name="model">openacademy.session</field>
+			<field name="arch" type="xml">
+				<form string="Session Form">
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="start_date"/>
+							<field name="duration"/>
+							<field name="seats"/>
+						</group>
 					</sheet>
 				</form>
 			</field>
@@ -64,5 +92,7 @@
         <!-- Full id location:
              action="openacademy.course_list_action"
              It is not required when it is the same module -->
+        <menuitem id="sessions_menu" name="Sessions" parent="openacademy_menu"
+                  action="session_list_action"/>
     </data>
 </odoo>
